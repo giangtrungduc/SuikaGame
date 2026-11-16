@@ -1,0 +1,34 @@
+name: Sync Git Commit to Google Sheets
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  sync-sheet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send commit info to Google Apps Script
+        env:
+          WEBHOOK_URL: ${{ secrets.SHEET_WEBHOOK_URL }}
+          SECRET_TOKEN: ${{ secrets.SHEET_SECRET }}
+          COMMITS_JSON: ${{ toJson(github.event.commits) }}
+        run: |
+          node -e '
+            async function run() {
+              const commits = JSON.parse(process.env.COMMITS_JSON || "[]");
+              const res = await fetch(process.env.WEBHOOK_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  secret: process.env.SECRET_TOKEN,
+                  commits: commits
+                })
+              });
+              const text = await res.text();
+              console.log("Phan hoi tu Google Sheets:", text);
+            }
+            run().catch(err => { console.error(err); process.exit(1); });
+          '
