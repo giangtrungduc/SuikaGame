@@ -17,6 +17,9 @@ public class DropController : MonoBehaviour
     [SerializeField] private float moveSpeed = 25f;
     [SerializeField] private float currentItemRadius = 0.5f;
 
+    [Header("Thả")]
+    [SerializeField] private ItemManager itemManager;
+
     private LineRenderer lr;
     private Camera mainCamera;
     private bool isDragging;
@@ -109,8 +112,10 @@ public class DropController : MonoBehaviour
 
     private void DropCurrentItem()
     {
-        //canDrop = false;
-        //SetVisible(false);
+        canDrop = false;
+        SetVisible(false);
+
+        itemManager.ReleaseCurrentItem();
     }
 
     public void SetCurrentItemRadius(float newRadius)
@@ -121,6 +126,11 @@ public class DropController : MonoBehaviour
     public void SetVisible(bool isVisible)
     {
         lr.enabled = isVisible;
+    }
+    public void EnableDropping()
+    {
+        canDrop = true;
+        SetVisible(true);
     }
 
     private bool IsPointerOverUI()
