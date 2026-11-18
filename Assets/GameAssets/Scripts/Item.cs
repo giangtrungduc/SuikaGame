@@ -42,6 +42,8 @@ public class Item : MonoBehaviour
             {
                 this.IsMerging = true;
                 otherItem.IsMerging = true;
+
+                manager.MergeItem(this, otherItem);
             }
         }
     }

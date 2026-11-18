@@ -16,7 +16,7 @@ public class ItemManager : MonoBehaviour
     public event Action<Sprite> OnNextItemUpdated;
     public event Action<int, Vector3, int, float, Color> OnItemMerged;     
     public event Action<Vector3, int, float, Color> OnLevel12Cleared;  
-    public event Action<Vector3, Color> OnItemDestroyedByPowerUp;
+    //public event Action<Vector3, Color> OnItemDestroyedByPowerUp;
 
     private readonly List<Item> activeItems = new List<Item>();
     private Item currentHoldingItem;
@@ -63,6 +63,38 @@ public class ItemManager : MonoBehaviour
 
         currentHoldingItem = null;
         StartCoroutine(SpawnNextRoutine());
+    }
+    public void MergeItem(Item itemA, Item itemB)
+    {
+        if (itemA == null || itemB == null) return;
+
+        Debug.Log("Từ: " + itemA.Data.level);
+
+        ItemData currentData = itemA.Data;
+        Vector3 mergePos = (itemA.transform.position + itemB.transform.position) * 0.5f;
+
+        activeItems.Remove(itemA);
+        activeItems.Remove(itemB);
+        Destroy(itemA.gameObject);
+        Destroy(itemB.gameObject);
+
+        // Xử lý item max cấp
+        if(currentData.level >= 12 || currentData.level >= allItemDatas.Length)
+        {
+            OnLevel12Cleared?.Invoke(mergePos, currentData.mergeScore, currentData.comboFillAmount, currentData.themeColor);
+            return;
+        }
+
+        ItemData nextLevelData = allItemDatas[currentData.level];
+        Item mergeItem = Instantiate(itemPrefab, mergePos, Quaternion.identity);
+
+        Debug.Log("Tao ra: " + nextLevelData.level);
+
+        mergeItem.Initialize(nextLevelData, this);
+        mergeItem.SetDroppedState(droppedItemLayer);
+        activeItems.Add(mergeItem);
+
+        OnItemMerged?.Invoke(nextLevelData.level, mergePos, currentData.mergeScore, currentData.comboFillAmount, nextLevelData.themeColor);
     }
     private IEnumerator SpawnNextRoutine()
     {

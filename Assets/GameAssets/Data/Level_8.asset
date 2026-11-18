@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20769beaca592234cb6a4a0dd8464e3b, type: 3}
   m_Name: Level_8
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  level: 1
-  itemName: "H\u1EA1t Tr\xE2n Ch\xE2u"
-  sprite: {fileID: 21300000, guid: f3e059210d0d672478f20fe8c305aeab, type: 3}
-  themeColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
-  colliderRadius: 0.22
-  mass: 0.5
-  mergeScore: 10
-  comboFillAmount: 8
+  level: 8
+  itemName: "B\xE1nh Bao \u0110\xE0o Ti\xEAn"
+  sprite: {fileID: 21300000, guid: f27746f27cd630a4483a424d1441dc5b, type: 3}
+  themeColor: {r: 1, g: 0.6698113, b: 0.8349056, a: 1}
+  colliderRadius: 0.97
+  mass: 3
+  mergeScore: 1200
+  comboFillAmount: 32
