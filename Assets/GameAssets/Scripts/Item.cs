@@ -5,6 +5,7 @@ public class Item : MonoBehaviour
     public ItemData Data { get; private set; }
     public bool IsDropped { get; set; }
     public bool IsMerging { get; set; }
+    public bool CanDetector { get; set; }
 
     [SerializeField] private SpriteRenderer spriteRenderer;
 
@@ -25,6 +26,7 @@ public class Item : MonoBehaviour
         Data = data;
         manager = itemManager;
         IsMerging = false;
+        CanDetector = false;
 
         spriteRenderer.sprite = data.sprite;
         circleCollider.radius = data.colliderRadius;
@@ -33,6 +35,8 @@ public class Item : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (IsMerging) return;
+
+        if (IsDropped && (collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Item"))) CanDetector = true;
 
         if(collision.gameObject.TryGetComponent(out Item otherItem))
         {
